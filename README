@@ -1,0 +1,7 @@
+add this to ~/.config/fish/config.fish
+
+function preexec_test --on-event fish_preexec
+  ~/Git/wakatime-tmux/tmux-wakatime $PWD $argv
+end
+
+# --on-event fish_postexec
