@@ -1,0 +1,4 @@
+# wakatime wrap
+
+make something that starts a process ... captures PID
+and log into wakatime each minute until PID stops

@@ -29,13 +29,15 @@ if ( $when eq "pre" ) {
     # if we are in a Git dir
     if ( ( $path =~ /Git/ ) || ( $path =~ /Project/ ) ) {
         if ( $path =~ /Git/ ) {
-            chdir($path);
-            my $gitexec =
+            if ( basename($path) ne "Git" ) {
+                chdir($path);
+                my $gitexec =
 'git remote -v | head -n1 | awk \'{print $2}\' | sed -e \'s,.*:\(.*/\)\?,,\' -e \'s/\.git$//\'';
-            $name = `$gitexec`;
-            chomp($gitname);
-            my $tmuxexec = 'tmux rename-window "' . $name . '"';
-            system("$tmuxexec &");
+                $name = `$gitexec`;
+                chomp($gitname);
+                my $tmuxexec = 'tmux rename-window "' . $name . '"';
+                system("$tmuxexec &");
+            }
         }
         if ( $path =~ /Project/ ) {
             my $projectname = basename($path);
