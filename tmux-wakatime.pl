@@ -34,7 +34,12 @@ if ( $when eq "pre" ) {
                 my $gitexec =
 'git remote -v | head -n1 | awk \'{print $2}\' | sed -e \'s,.*:\(.*/\)\?,,\' -e \'s/\.git$//\'';
                 $name = `$gitexec`;
-                chomp($gitname);
+
+                # chomp
+                chomp($name);
+
+                # trim
+                $name =~ s/^\s+|\s+$//g;
                 my $tmuxexec = 'tmux rename-window "' . $name . '"';
                 system("$tmuxexec &");
             }
@@ -55,6 +60,12 @@ if ( $when eq "pre" ) {
                 $log->close();
             }
             $name = $projectname;
+
+            # chomp
+            chomp($name);
+
+            # trim
+            $name =~ s/^\s+|\s+$//g;
         }
     }
     else {
