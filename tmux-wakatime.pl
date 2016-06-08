@@ -69,6 +69,8 @@ if ( $when eq "pre" ) {
         system("$exec &");
     }
     else {
+	$name =~ s/^\s+|\s+$//g;
+
         my $exec =
 "wakatime --write --plugin \"tmux-wakatime/0.0.1\" --entity-type app --project \"$name\" --alternate-language fish --entity \"shell\"";
 
