@@ -7,12 +7,22 @@ use Time::Stamp 'localstamp';
 # timestamp
 my $now = localstamp();
 
+# check if we are in tmux
+system("tmux ls > /dev/null 2>&1");
+if ($? ne 0) {
+	$ontmux = 0;
+} else {
+	$ontmux =1 ;
+}
+
 # username
 my $username = $ENV{USERNAME};
 
 # tmux display name
-my $tmux = `tmux display-message -p '#W'`;
-chomp($tmux);
+if ($ontmux) {
+	my $tmux = `tmux display-message -p '#W'`;
+	chomp($tmux);
+}
 
 # post or pre
 my $when = $ARGV[0];
@@ -40,15 +50,23 @@ if ( $when eq "pre" ) {
 
                 # trim
                 $name =~ s/^\s+|\s+$//g;
-                my $tmuxexec = 'tmux rename-window "' . $name . '"';
-                system("$tmuxexec &");
+		if ($ontmux) {
+			my $tmuxexec = 'tmux rename-window "' . $name . '"';
+			system("$tmuxexec &");
+		} else {
+			print "\033]0;" . $name . "\007";
+		}
             }
         }
         if ( $path =~ /Project/ ) {
             my $projectname = basename($path);
             if ( $projectname ne "Project" ) {
-                my $tmuxexec = 'tmux rename-window "' . $projectname . '"';
-                system("$tmuxexec &");
+		if ($ontmux) {
+			my $tmuxexec = 'tmux rename-window "' . $projectname . '"';
+			system("$tmuxexec &");
+		} else {
+			print "\033]0;" . $projectname . "\007";
+		}
                 my $log =
                   new IO::File ">>" . $path . "/." . $projectname . "-logfile";
                 $log->print( "["
@@ -69,8 +87,10 @@ if ( $when eq "pre" ) {
         }
     }
     else {
-        my $tmuxexec = 'tmux setw automatic-rename';
-        system("$tmuxexec &");
+	if ($ontmux) {
+		my $tmuxexec = 'tmux setw automatic-rename';
+		system("$tmuxexec &");
+	}
     }
 
     if ( $name eq '' ) {
