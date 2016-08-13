@@ -37,7 +37,7 @@ if ( $when eq "pre" ) {
     my $name;
 
     # if we are in a Git dir
-    if ( ( $path =~ /Git/ ) || ( $path =~ /Project/ ) ) {
+    if ( ( $path =~ /Git/ ) || ( $path =~ /Project/ ) || $path =~ /Projects/) {
         if ( $path =~ /Git/ ) {
             if ( basename($path) ne "Git" ) {
                 chdir($path);
